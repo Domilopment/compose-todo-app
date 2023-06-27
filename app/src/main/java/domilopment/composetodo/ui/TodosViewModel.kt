@@ -1,12 +1,8 @@
 package domilopment.composetodo.ui
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import domilopment.composetodo.TodoApplication
+import dagger.hilt.android.lifecycle.HiltViewModel
 import domilopment.composetodo.data.InsertUiState
 import domilopment.composetodo.data.Todo
 import domilopment.composetodo.data.TodoRepository
@@ -16,8 +12,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class TodosViewModel(private val todoRepository: TodoRepository) : ViewModel() {
+@HiltViewModel
+class TodosViewModel @Inject constructor(private val todoRepository: TodoRepository) : ViewModel() {
     private val _uiState: MutableStateFlow<TodosUIState> = MutableStateFlow(TodosUIState())
     val uiState: StateFlow<TodosUIState> = _uiState.asStateFlow()
 
@@ -51,15 +49,6 @@ class TodosViewModel(private val todoRepository: TodoRepository) : ViewModel() {
     fun onInsertTextChanges(newTodoTitle: String) {
         _insertUiState.update { state ->
             state.copy(todoTitle = newTodoTitle)
-        }
-    }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val myRepository = (this[APPLICATION_KEY] as TodoApplication).repository
-                TodosViewModel(myRepository)
-            }
         }
     }
 }

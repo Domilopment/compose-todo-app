@@ -2,8 +2,9 @@ package domilopment.composetodo.data
 
 import androidx.annotation.WorkerThread
 import domilopment.composetodo.data.room.TodoDao
+import javax.inject.Inject
 
-class TodoRepository(private val todoDao: TodoDao) {
+class TodoRepository @Inject constructor(private val todoDao: TodoDao) {
     val todos = todoDao.getTodos()
 
     @WorkerThread

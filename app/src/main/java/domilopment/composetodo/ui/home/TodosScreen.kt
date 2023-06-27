@@ -24,13 +24,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import domilopment.composetodo.ui.TodosViewModel
 import domilopment.composetodo.data.Todo
 
 @Composable
 fun TodoScreen(onNavigate: () -> Unit) {
-    val viewModel: TodosViewModel = viewModel(factory = TodosViewModel.Factory)
+    val viewModel = hiltViewModel<TodosViewModel>()
     val uiState by viewModel.uiState.collectAsState()
 
     Scaffold(floatingActionButton = {
@@ -57,8 +57,7 @@ fun TodoItem(todo: Todo, onValueChanged: (Boolean) -> Unit, onDelete: (Todo) -> 
         color = MaterialTheme.colorScheme.primaryContainer,
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
         shape = MaterialTheme.shapes.small,
-        modifier = Modifier
-            .padding(8.dp, 4.dp),
+        modifier = Modifier.padding(8.dp, 4.dp),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

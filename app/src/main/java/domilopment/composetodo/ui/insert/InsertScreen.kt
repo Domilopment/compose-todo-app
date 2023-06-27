@@ -12,22 +12,23 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import domilopment.composetodo.data.Todo
 import domilopment.composetodo.ui.TodosViewModel
 
 @Composable
 fun InsertScreen(onNavigate: () -> Unit) {
-    val viewModel: TodosViewModel = viewModel(factory = TodosViewModel.Factory)
+    val viewModel = hiltViewModel<TodosViewModel>()
     val uiState by viewModel.insertUiState.collectAsState()
 
     Column(
-        modifier = Modifier.fillMaxWidth().fillMaxHeight(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        OutlinedTextField(
-            value = uiState.todoTitle,
+        OutlinedTextField(value = uiState.todoTitle,
             onValueChange = { viewModel.onInsertTextChanges(it) },
             label = { Text(text = "Todo") })
         Button(onClick = {
