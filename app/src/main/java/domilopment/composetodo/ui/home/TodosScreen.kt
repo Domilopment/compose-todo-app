@@ -11,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -18,26 +19,41 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import domilopment.composetodo.ui.TodosViewModel
 import domilopment.composetodo.data.Todo
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TodoScreen(onNavigate: () -> Unit) {
     val viewModel = hiltViewModel<TodosViewModel>()
     val uiState by viewModel.uiState.collectAsState()
 
-    Scaffold(floatingActionButton = {
-        FloatingActionButton(onClick = { onNavigate() }) {
-            Icon(imageVector = Icons.Default.Add, contentDescription = null)
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(onClick = { onNavigate() }) {
+                Icon(imageVector = Icons.Default.Add, contentDescription = null)
+            }
+        },
+        topBar = {
+            TopAppBar(
+                title = { Text("Todos: ${uiState.todos.size}") },
+                colors = topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = Color.White
+                )
+            )
         }
-    }) { paddingValues ->
+    ) { paddingValues ->
         if (uiState.todos.isEmpty()) Text(
             text = "Add Todos", modifier = Modifier.padding(paddingValues)
         )
