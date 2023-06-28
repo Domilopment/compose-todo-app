@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -57,16 +58,19 @@ fun InsertScreen(
                 modifier = Modifier.background(MaterialTheme.colorScheme.background)
             )
 
-            Spacer(modifier = Modifier)
+            Spacer(modifier = Modifier.padding(8.dp))
 
-            Button(onClick = {
-                val todo = if (isEditMode) Todo(
-                    id = uiState.todoId, title = uiState.todoTitle
-                ) else Todo(title = uiState.todoTitle)
-                viewModel.addTodo(todo)
-                showSnackbar("Item ${uiState.todoTitle} added")
-                onNavigate()
-            }) {
+            Button(
+                onClick = {
+                    val todo = if (isEditMode) Todo(
+                        id = uiState.todoId, title = uiState.todoTitle
+                    ) else Todo(title = uiState.todoTitle)
+                    viewModel.addTodo(todo)
+                    showSnackbar("Item ${uiState.todoTitle} added")
+                    onNavigate()
+                },
+                modifier = Modifier.width(264.dp)
+            ) {
                 Text(text = if (isEditMode) "Update" else "Save")
             }
         }
