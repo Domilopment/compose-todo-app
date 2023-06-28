@@ -34,7 +34,7 @@ import domilopment.composetodo.data.Todo
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TodoScreen(onNavigate: () -> Unit) {
+fun TodoScreen(onNavigate: () -> Unit, showSnackbar: (String) -> Unit) {
     val viewModel = hiltViewModel<TodosViewModel>()
     val uiState by viewModel.uiState.collectAsState()
 
@@ -61,14 +61,21 @@ fun TodoScreen(onNavigate: () -> Unit) {
             items(uiState.todos) { todo: Todo ->
                 TodoItem(todo = todo,
                     onValueChanged = { viewModel.updateTodo(todo, it) },
-                    onDelete = { viewModel.deleteTodo(it) })
+                    onDelete = { viewModel.deleteTodo(it) },
+                    showSnackbar = { showSnackbar(it) }
+                )
             }
         }
     }
 }
 
 @Composable
-fun TodoItem(todo: Todo, onValueChanged: (Boolean) -> Unit, onDelete: (Todo) -> Unit) {
+fun TodoItem(
+    todo: Todo,
+    onValueChanged: (Boolean) -> Unit,
+    onDelete: (Todo) -> Unit,
+    showSnackbar: (String) -> Unit
+) {
     Surface(
         color = MaterialTheme.colorScheme.primaryContainer,
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
@@ -84,7 +91,7 @@ fun TodoItem(todo: Todo, onValueChanged: (Boolean) -> Unit, onDelete: (Todo) -> 
         ) {
             Checkbox(checked = todo.done, onCheckedChange = { onValueChanged(it) })
             Text(text = todo.title)
-            IconButton(onClick = { onDelete(todo) }) {
+            IconButton(onClick = { onDelete(todo); showSnackbar("Todo ${todo.title} deletes") }) {
                 Icon(imageVector = Icons.Default.Delete, contentDescription = null)
             }
         }

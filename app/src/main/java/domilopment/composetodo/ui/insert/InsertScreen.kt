@@ -29,7 +29,7 @@ import domilopment.composetodo.ui.TodosViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InsertScreen(onNavigate: () -> Unit) {
+fun InsertScreen(onNavigate: () -> Unit, showSnackbar: (String) -> Unit) {
     val viewModel = hiltViewModel<TodosViewModel>()
     val uiState by viewModel.insertUiState.collectAsState()
 
@@ -62,6 +62,7 @@ fun InsertScreen(onNavigate: () -> Unit) {
                 label = { Text(text = "Todo") })
             Button(onClick = {
                 viewModel.addTodo(Todo(title = uiState.todoTitle))
+                showSnackbar("Item ${uiState.todoTitle} added")
                 onNavigate()
             }) {
                 Text(text = "Save")
