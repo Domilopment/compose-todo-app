@@ -14,7 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import domilopment.composetodo.data.Todo
-import domilopment.composetodo.ui.TodosViewModel
 
 @Composable
 fun InsertScreen(
@@ -22,8 +21,9 @@ fun InsertScreen(
     appBarState: (String, Boolean) -> Unit,
     showSnackbar: (String) -> Unit
 ) {
-    val viewModel = hiltViewModel<TodosViewModel>()
+    val viewModel = hiltViewModel<InputViewModel>()
     val uiState by viewModel.insertUiState.collectAsState()
+    val isEditMode = uiState.todoId != -1L
 
     appBarState("Add Todo", true)
 
@@ -38,11 +38,14 @@ fun InsertScreen(
             onValueChange = { viewModel.onInsertTextChanges(it) },
             label = { Text(text = "Todo") })
         Button(onClick = {
-            viewModel.addTodo(Todo(title = uiState.todoTitle))
+            val todo = if (isEditMode) Todo(
+                id = uiState.todoId, title = uiState.todoTitle
+            ) else Todo(title = uiState.todoTitle)
+            viewModel.addTodo(todo)
             showSnackbar("Item ${uiState.todoTitle} added")
             onNavigate()
         }) {
-            Text(text = "Save")
+            Text(text = if (isEditMode) "Update" else "Save")
         }
     }
 }

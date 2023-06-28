@@ -1,4 +1,4 @@
-package domilopment.composetodo.ui
+package domilopment.composetodo.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,9 +19,6 @@ class TodosViewModel @Inject constructor(private val todoRepository: TodoReposit
     private val _uiState: MutableStateFlow<TodosUIState> = MutableStateFlow(TodosUIState())
     val uiState: StateFlow<TodosUIState> = _uiState.asStateFlow()
 
-    private val _insertUiState: MutableStateFlow<InsertUiState> = MutableStateFlow(InsertUiState())
-    val insertUiState: StateFlow<InsertUiState> = _insertUiState.asStateFlow()
-
     init {
         viewModelScope.launch {
             todoRepository.todos.collect {
@@ -40,15 +37,5 @@ class TodosViewModel @Inject constructor(private val todoRepository: TodoReposit
 
     fun deleteTodo(todo: Todo) = viewModelScope.launch {
         todoRepository.deleteTodo(todo)
-    }
-
-    fun addTodo(todo: Todo) = viewModelScope.launch {
-        todoRepository.insertTodo(todo)
-    }
-
-    fun onInsertTextChanges(newTodoTitle: String) {
-        _insertUiState.update { state ->
-            state.copy(todoTitle = newTodoTitle)
-        }
     }
 }

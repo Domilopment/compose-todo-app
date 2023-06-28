@@ -1,6 +1,7 @@
 package domilopment.composetodo.ui.home
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,12 +26,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import domilopment.composetodo.ui.TodosViewModel
 import domilopment.composetodo.data.Todo
 
 @Composable
 fun TodoScreen(
-    onNavigate: () -> Unit,
+    onNavigate: (Todo?) -> Unit,
     appBarState: (String, Boolean) -> Unit,
     showSnackbar: (String) -> Unit
 ) {
@@ -40,7 +40,7 @@ fun TodoScreen(
     appBarState("Todos: ${uiState.todos.size}", false)
 
     Scaffold(floatingActionButton = {
-        FloatingActionButton(onClick = { onNavigate() }) {
+        FloatingActionButton(onClick = { onNavigate(null) }) {
             Icon(imageVector = Icons.Default.Add, contentDescription = null)
         }
     }) { paddingValues ->
@@ -52,6 +52,7 @@ fun TodoScreen(
                 TodoItem(todo = todo,
                     onValueChanged = { viewModel.updateTodo(todo, it) },
                     onDelete = { viewModel.deleteTodo(it) },
+                    onNavigate = { onNavigate(it) },
                     showSnackbar = { showSnackbar(it) })
             }
         }
@@ -63,13 +64,14 @@ fun TodoItem(
     todo: Todo,
     onValueChanged: (Boolean) -> Unit,
     onDelete: (Todo) -> Unit,
+    onNavigate: (Todo) -> Unit,
     showSnackbar: (String) -> Unit
 ) {
     Surface(
         color = MaterialTheme.colorScheme.primaryContainer,
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
         shape = MaterialTheme.shapes.small,
-        modifier = Modifier.padding(8.dp, 4.dp),
+        modifier = Modifier.padding(8.dp, 4.dp).clickable { onNavigate(todo) },
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

@@ -3,8 +3,10 @@ package domilopment.composetodo
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import domilopment.composetodo.data.AppBarState
 import domilopment.composetodo.ui.home.TodoScreen
 import domilopment.composetodo.ui.insert.InsertScreen
@@ -28,12 +30,12 @@ fun TodoNavHost(
     ) {
         composable(NavRoute.Todos.route) {
             TodoScreen(
-                onNavigate = { navController.navigate(NavRoute.Input.route) },
+                onNavigate = { navController.navigate("${NavRoute.Input.route}/${it?.id ?: -1L}") },
                 appBarState = { title, arrowBack -> appBarState(title, arrowBack) },
                 showSnackbar = { showSnackbar(it) }
             )
         }
-        composable(NavRoute.Input.route) {
+        composable("${NavRoute.Input.route}/{todoId}", arguments = listOf(navArgument("todoId"){ NavType.LongType })) { navBackStackEntity ->
             InsertScreen(
                 onNavigate = { navController.navigateUp() },
                 appBarState = { title, arrowBack -> appBarState(title, arrowBack) },
