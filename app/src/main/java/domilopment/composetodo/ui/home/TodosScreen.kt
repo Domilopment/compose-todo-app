@@ -3,9 +3,14 @@ package domilopment.composetodo.ui.home
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -16,6 +21,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -24,6 +30,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import domilopment.composetodo.data.Todo
@@ -39,14 +46,25 @@ fun TodoScreen(
 
     appBarState("Todos: ${uiState.todos.size}", false)
 
-    Scaffold(floatingActionButton = {
-        FloatingActionButton(onClick = { onNavigate(null) }) {
-            Icon(imageVector = Icons.Default.Add, contentDescription = null)
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(onClick = { onNavigate(null) }) {
+                Icon(imageVector = Icons.Default.Add, contentDescription = null)
+            }
+        },
+    ) { paddingValues ->
+        if (uiState.todos.isEmpty()) Box(
+            modifier = Modifier
+                .padding(paddingValues)
+                .fillMaxSize()
+                .wrapContentSize(Alignment.Center),
+        ) {
+            Text(
+                text = "Add Todos",
+                textAlign = TextAlign.Center,
+                style = typography.titleLarge
+            )
         }
-    }) { paddingValues ->
-        if (uiState.todos.isEmpty()) Text(
-            text = "Add Todos", modifier = Modifier.padding(paddingValues)
-        )
         else LazyColumn(modifier = Modifier.padding(paddingValues)) {
             items(uiState.todos) { todo: Todo ->
                 TodoItem(todo = todo,
@@ -71,18 +89,28 @@ fun TodoItem(
         color = MaterialTheme.colorScheme.primaryContainer,
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline),
         shape = MaterialTheme.shapes.small,
-        modifier = Modifier.padding(8.dp, 4.dp).clickable { onNavigate(todo) },
+        modifier = Modifier
+            .padding(8.dp, 4.dp)
+            .clickable { onNavigate(todo) },
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
+                .padding(12.dp)
         ) {
             Checkbox(checked = todo.done, onCheckedChange = { onValueChanged(it) })
-            Text(text = todo.title)
-            IconButton(onClick = { onDelete(todo); showSnackbar("Todo ${todo.title} deletes") }) {
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Text(text = todo.title, modifier = Modifier, style = typography.bodyLarge)
+
+            Spacer(modifier = Modifier
+                .width(8.dp)
+                .weight(1f))
+
+            IconButton(onClick = { onDelete(todo); showSnackbar("Todo ${todo.title} deleted") }) {
                 Icon(imageVector = Icons.Default.Delete, contentDescription = null)
             }
         }

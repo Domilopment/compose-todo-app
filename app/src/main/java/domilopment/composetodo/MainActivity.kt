@@ -59,7 +59,9 @@ class MainActivity : ComponentActivity() {
                         TodoNavHost(
                             modifier = Modifier.padding(contentPadding),
                             navController = navController,
-                            appBarState = { title, arrowBack -> appBarState = AppBarState(title, arrowBack) },
+                            appBarState = { title, arrowBack ->
+                                appBarState = AppBarState(title, arrowBack)
+                            },
                             showSnackbar = {
                                 scope.launch {
                                     snackbarHostState.showSnackbar(it)
