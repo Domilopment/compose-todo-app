@@ -4,6 +4,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -44,7 +45,7 @@ fun TodoScreen(
     val viewModel = hiltViewModel<TodosViewModel>()
     val uiState by viewModel.uiState.collectAsState()
 
-    appBarState("Todos: ${uiState.todos.size}", false)
+    appBarState("Todo App", false)
 
     Scaffold(
         floatingActionButton = {
@@ -65,13 +66,44 @@ fun TodoScreen(
                 style = typography.titleLarge
             )
         }
-        else LazyColumn(modifier = Modifier.padding(paddingValues)) {
-            items(uiState.todos) { todo: Todo ->
-                TodoItem(todo = todo,
-                    onValueChanged = { viewModel.updateTodo(todo, it) },
-                    onDelete = { viewModel.deleteTodo(it) },
-                    onNavigate = { onNavigate(it) },
-                    showSnackbar = { showSnackbar(it) })
+        else Column(modifier = Modifier.padding(paddingValues)) {
+            val done = uiState.todos.filter { it.done }
+            val undone = uiState.todos.filter { !it.done }
+
+            Text(
+                text = "Todos: ${undone.size}",
+                style = typography.titleLarge,
+                modifier = Modifier.padding(8.dp)
+            )
+
+            LazyColumn {
+                items(undone) { todo: Todo ->
+                    TodoItem(
+                        todo = todo,
+                        onValueChanged = { viewModel.updateTodo(todo, it) },
+                        onDelete = { viewModel.deleteTodo(it) },
+                        onNavigate = { onNavigate(it) },
+                        showSnackbar = { showSnackbar(it) }
+                    )
+                }
+            }
+
+            Text(
+                text = "Done: ${done.size}",
+                style = typography.titleLarge,
+                modifier = Modifier.padding(8.dp)
+            )
+
+            LazyColumn {
+                items(done) { todo: Todo ->
+                    TodoItem(
+                        todo = todo,
+                        onValueChanged = { viewModel.updateTodo(todo, it) },
+                        onDelete = { viewModel.deleteTodo(it) },
+                        onNavigate = { onNavigate(it) },
+                        showSnackbar = { showSnackbar(it) }
+                    )
+                }
             }
         }
     }
@@ -106,9 +138,11 @@ fun TodoItem(
 
             Text(text = todo.title, modifier = Modifier, style = typography.bodyLarge)
 
-            Spacer(modifier = Modifier
-                .width(8.dp)
-                .weight(1f))
+            Spacer(
+                modifier = Modifier
+                    .width(8.dp)
+                    .weight(1f)
+            )
 
             IconButton(onClick = { onDelete(todo); showSnackbar("Todo ${todo.title} deleted") }) {
                 Icon(imageVector = Icons.Default.Delete, contentDescription = null)
