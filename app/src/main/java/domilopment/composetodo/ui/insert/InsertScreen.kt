@@ -31,7 +31,7 @@ fun InsertScreen(
     val uiState by viewModel.insertUiState.collectAsState()
     val isEditMode = uiState.todoId != -1L
 
-    appBarState("Add Todo", true)
+    appBarState(if (isEditMode) "Edit Todo" else "Add Todo", true)
 
     Column(
         modifier = Modifier
