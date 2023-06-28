@@ -35,7 +35,10 @@ fun TodoNavHost(
                 showSnackbar = { showSnackbar(it) }
             )
         }
-        composable("${NavRoute.Input.route}/{todoId}", arguments = listOf(navArgument("todoId"){ NavType.LongType })) { navBackStackEntity ->
+        composable(
+            route = "${NavRoute.Input.route}/{todoId}",
+            arguments = listOf(navArgument("todoId") { type = NavType.LongType })
+        ) { navBackStackEntity ->
             InsertScreen(
                 onNavigate = { navController.navigateUp() },
                 appBarState = { title, arrowBack -> appBarState(title, arrowBack) },

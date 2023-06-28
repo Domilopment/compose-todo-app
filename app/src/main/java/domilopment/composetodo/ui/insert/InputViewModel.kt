@@ -26,7 +26,7 @@ class InputViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             todoRepository.todos.collect { todos ->
-                todos.find { it.id.toString() == savedStateHandle["todoId"] }?.also {
+                todos.find { it.id == savedStateHandle["todoId"] }?.also {
                     _insertUiState.update { state ->
                         state.copy(
                             todoTitle = it.title,
