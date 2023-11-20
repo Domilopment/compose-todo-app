@@ -3,7 +3,6 @@ package domilopment.composetodo.ui.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import domilopment.composetodo.data.InsertUiState
 import domilopment.composetodo.data.Todo
 import domilopment.composetodo.data.TodoRepository
 import domilopment.composetodo.data.TodosUIState
